@@ -1,3 +1,5 @@
+# Falta concluir os processos de locação 
+
 import json
 import pprint
 
@@ -20,7 +22,7 @@ try:
 except:
     pass
 
-# Funções
+#--------------------------------------------------- Funções -------------------------------------------------
 def clear():
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
@@ -128,6 +130,94 @@ def editar_veiculo(placa):
     except:
         print("\nOps, algo deu errado!")
 
+# Exclusão
+def excluir_cliente(cpf):
+    try:
+        clear()
+        print(f"\nInformações atuais do cliente de CPF: {cpf}\n\n")
+        pprint.pprint(clientes[cpf])
+        confirmacao = input("Deseja mesmo excluir este cliente? (S/N): ")
+
+        if confirmacao.lower() == "s":
+            del clientes[cpf]
+        
+        else:
+            return
+
+        with open('clientes.json', 'w') as outfile:
+            json.dump(clientes, outfile)
+
+        print("\nExclusão efetuada com sucesso!")
+
+    except:
+        print("\nOps, algo deu errado!")
+
+def excluir_veiculo(placa):
+    try:
+        clear()
+        print(f"\nInformações atuais do veiculo de placa: {placa}\n\n")
+        pprint.pprint(veiculos[placa])
+        confirmacao = input("Deseja mesmo excluir este veículo? (S/N): ")
+
+        if confirmacao.lower() == "s":
+            del veiculos[placa]
+        
+        else:
+            return
+
+        with open('veiculos.json', 'w') as outfile:
+            json.dump(veiculos, outfile)
+
+        print("\nExclusão efetuada com sucesso!")
+
+    except:
+        print("\nOps, algo deu errado!")
+
+# Evento
+def lancar_locacao(data):
+    try:
+        clear()
+        placa_veiculo = str(input("Placa do veículo: "))
+        cpf_cliente = str(input("CPF do cliente: "))
+        duracao = int(input("Duração da locação (dias): "))
+
+        # Split na data
+        data_split = data.split('/')
+        dia = data_split[0]
+        mes = data_split[1]
+        ano = data_split[2]
+
+        # Alterações nas entidades
+        veiculos[placa_veiculo]["alugado"] = True
+        veiculos[placa_veiculo]["cpf_aluguel"] = cpf_cliente
+        clientes[cpf_cliente]["veiculo"] = placa_veiculo
+
+        # Criação da locação
+        locacoes[ano][mes][dia] = {
+            "status": "aberto",
+            "cpf_cliente":cpf_cliente,
+            "placa_veiculo":placa_veiculo,
+            "duracao": duracao,
+            "valor": duracao * veiculos[placa_veiculo]["diaria"]
+        }
+
+        with open('clientes.json', 'w') as outfile:
+            json.dump(clientes, outfile)
+
+        with open('veiculos.json', 'w') as outfile:
+            json.dump(veiculos, outfile)
+
+        with open('locacoes.json', 'w') as outfile:
+            json.dump(locacoes, outfile)
+        
+        print("Cadastro efetuado com sucesso!")
+
+    except:
+        print("\nOps, algo deu errado!")
+
+
+# -------------------------------------------------- Código ---------------------------------------------------
+
 # Menu inicial
 while True:
 
@@ -148,6 +238,13 @@ while True:
         print("1 - Lançar locação")
         print("2 - Lançar devolução")
         print("3 - Voltar")
+
+        escolha2 = int(input("\n"))
+
+        if escolha2 == 1:
+            clear()
+            data = input("Digite a data de início da locação (xx/yy/zzzz): ")
+            lancar_locacao(data)
          
     elif escolha1 == 2:
         clear()
@@ -206,7 +303,6 @@ while True:
                 consultar_veiculo(placa)
                 again = input("\n\nDeseja consultar novamente? (S/N): ")
 
-
     elif escolha1 == 4:
         clear()
         print("\nAba de Edição\n")
@@ -229,27 +325,59 @@ while True:
         
         if escolha2 == 2:
             clear()
-            placa = input("Digite a placa do veículo a ser consultado: ")
-            consultar_veiculo(placa)
-            again = input("\n\nDeseja consultar novamente? (S/N): ")
+            placa = input("Digite a placa do veículo a ser editado: ")
+            editar_veiculo(placa)
+            again = input("\n\nDeseja editar novamente? (S/N): ")
 
             while again.lower() == "s":
-                placa = input("Digite a placa do veículo a ser consultado: ")
-                consultar_veiculo(placa)
-                again = input("\n\nDeseja consultar novamente? (S/N): ")
+                placa = input("Digite a placa do veículo a ser editado: ")
+                editar_veiculo(placa)
+                again = input("\n\nDeseja editar novamente? (S/N): ")
 
     elif escolha1 == 5:
         clear()
         print("\nAba de exclusão\n")
         print("1 - Excluir clientes")
         print("2 - Excluir veículo")
-        print("3 - Consultar locacao")
-        print("4 - Voltar")
+        print("3 - Voltar")
     
+        escolha2 = int(input("\n"))
+
+        if escolha2 == 1:
+            clear()
+            cpf = input("Digite o CPF do cliente a ser excluído: ")
+            excluir_cliente(cpf)
+            again = input("\n\nDeseja excluir outro cliente? (S/N): ")
+
+            while again.lower() == "s":
+                cpf = input("Digite o CPF do cliente a ser excluído: ")
+                excluir_cliente(cpf)
+                again = input("\n\nDeseja excluir outro cliente? (S/N): ")
+        
+        if escolha2 == 2:
+            clear()
+            placa = input("Digite a placa do veículo a ser excluído: ")
+            excluir_veiculo(placa)
+            again = input("\n\nDeseja excluir outro veiculo? (S/N): ")
+
+            while again.lower() == "s":
+                placa = input("Digite a placa ser excluído: ")
+                excluir_veiculo(placa)
+                again = input("\n\nDeseja excluir outro veiculo? (S/N): ")
+
+    elif escolha1 == 6:
+        clear()
+        print("\nAba de Panorama\n")
+        print("1 - Panorama: clientes")
+        print("2 - Panorama: veículos")
+        print("2 - Panorama: locacoes")
+        print("3 - Voltar")
+
     elif escolha1 == 7:
         break
 
     else:
+        clear()
         print("digite uma opção válida!")
         
     
