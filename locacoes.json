@@ -1,1 +1,1 @@
-{}
+{"2021": {"03": {"25": [{"id": 1, "data": "25/03/2021", "status": "aberto", "cpf_cliente": "52298446806", "placa_veiculo": "ABC-1234", "duracao": 5, "valor": 1500}, {"id": 2, "data": "25/03/2021", "status": "fechada", "cpf_cliente": "26417861848", "placa_veiculo": "ZZZ-1111", "duracao": 7, "valor": 525}]}}}

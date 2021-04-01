@@ -1,1 +1,1 @@
-{"ABC-1234": {"modelo": "Onix LTZ 2020", "diaria": 300, "alugado": false, "cpf_aluguel": ""}, "ZZZ-1111": {"modelo": "Corsa 2015", "diaria": 250, "alugado": false, "cpf_aluguel": ""}}
+{"ABC-1234": {"modelo": "Onix LTZ 2020", "diaria": 300, "alugado": true, "cpf_aluguel": "52298446806"}, "ZZZ-1111": {"modelo": "Celta 4 portas", "diaria": 75, "alugado": false, "cpf_aluguel": ""}}

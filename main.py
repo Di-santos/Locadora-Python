@@ -1,9 +1,11 @@
-# Falta concluir os processos de locação 
+# Falta concluir as consultas de locação
 
 import json
 import pprint
 
 # Instanciação dos objetos
+id = 0
+
 clientes = {}
 veiculos = {}
 locacoes = {}
@@ -176,7 +178,7 @@ def excluir_veiculo(placa):
 # Evento
 def lancar_locacao(data):
     try:
-        clear()
+        print("\n\n\n\n")
         placa_veiculo = str(input("Placa do veículo: "))
         cpf_cliente = str(input("CPF do cliente: "))
         duracao = int(input("Duração da locação (dias): "))
@@ -193,13 +195,25 @@ def lancar_locacao(data):
         clientes[cpf_cliente]["veiculo"] = placa_veiculo
 
         # Criação da locação
-        locacoes[ano][mes][dia] = {
+        if ano not in locacoes:
+            locacoes[ano] = {}
+
+        if mes not in locacoes[ano]:
+            locacoes[ano][mes] = {}
+
+        if dia not in locacoes[ano][mes]:
+            locacoes[ano][mes][dia] = []
+
+        locacoes[ano][mes][dia].append({
+            "id": id,
+            "data": data,
             "status": "aberto",
             "cpf_cliente":cpf_cliente,
             "placa_veiculo":placa_veiculo,
             "duracao": duracao,
             "valor": duracao * veiculos[placa_veiculo]["diaria"]
-        }
+        })
+
 
         with open('clientes.json', 'w') as outfile:
             json.dump(clientes, outfile)
@@ -210,8 +224,41 @@ def lancar_locacao(data):
         with open('locacoes.json', 'w') as outfile:
             json.dump(locacoes, outfile)
         
-        print("Cadastro efetuado com sucesso!")
+        print("Locação efetuada com sucesso!")
 
+    except:
+        print("\nOps, algo deu errado!")
+
+def lancar_devolucao(data, id):
+    try:
+        # Split na data
+        data_split = data.split('/')
+        dia = data_split[0]
+        mes = data_split[1]
+        ano = data_split[2]
+
+        print("split foi")
+
+        for locacao in locacoes[ano][mes][dia]:
+            print("loop foi")
+            print(locacao["placa_veiculo"])
+
+            if locacao["id"] == int(id):
+                print("achei")
+                locacao["status"] = "fechada"
+                clientes[locacao["cpf_cliente"]]["veiculo"] = ""
+                veiculos[locacao["placa_veiculo"]]["cpf_aluguel"] = ""
+                veiculos[locacao["placa_veiculo"]]["alugado"] = False
+
+        with open('clientes.json', 'w') as outfile:
+            json.dump(clientes, outfile)
+
+        with open('veiculos.json', 'w') as outfile:
+            json.dump(veiculos, outfile)
+
+        with open('locacoes.json', 'w') as outfile:
+            json.dump(locacoes, outfile)
+    
     except:
         print("\nOps, algo deu errado!")
 
@@ -221,7 +268,7 @@ def lancar_locacao(data):
 # Menu inicial
 while True:
 
-    clear()
+    print("\n\n\n\n\n\n")
     print("1 - Evento")
     print("2 - Cadastro")
     print("3 - Consulta")
@@ -244,7 +291,14 @@ while True:
         if escolha2 == 1:
             clear()
             data = input("Digite a data de início da locação (xx/yy/zzzz): ")
+            id += 1
             lancar_locacao(data)
+
+        if escolha2 == 2:
+            clear()
+            data = input("Digite a data de início da locação (xx/yy/zzzz): ")
+            id = input("digite o id da locação: ")
+            lancar_devolucao(data, id)
          
     elif escolha1 == 2:
         clear()
