@@ -91,6 +91,21 @@ def consultar_veiculo(placa):
     except:
         print("Ops, algo deu errado!")
 
+def consultar_locacao(data, id):
+    try:
+        clear()
+        # Split na data
+        data_split = data.split('/')
+        dia = data_split[0]
+        mes = data_split[1]
+        ano = data_split[2]
+
+        for locacao in locacoes[ano][mes][dia]:
+            if locacao["id"] == int(id):
+                pprint.pprint(locacao)
+
+    except:
+        print("Ops, algo deu errado!")
 # Edição
 def editar_cliente(cpf):
     try:
@@ -262,6 +277,18 @@ def lancar_devolucao(data, id):
     except:
         print("\nOps, algo deu errado!")
 
+# Panorama
+def panorama_cv(db):
+    for objeto in db:
+        print ("--------------------------------------------------------------")
+        pprint.pprint(objeto)
+
+def panorama_locacoes():
+    for ano in locacoes:
+        for mes in ano:
+            for dia in mes:
+                print ("--------------------------------------------------------------")
+                pprint.pprint(dia)
 
 # -------------------------------------------------- Código ---------------------------------------------------
 
@@ -356,6 +383,19 @@ while True:
                 placa = input("Digite a placa do veículo a ser consultado: ")
                 consultar_veiculo(placa)
                 again = input("\n\nDeseja consultar novamente? (S/N): ")
+        
+        if escolha2 == 3:
+            clear()
+            data = input("Digite a data de início da locação a ser consultada: ")
+            id = input("Digite o id da locação a ser consultada: ")
+            consultar_locacao(data, id)
+            again = input("\n\nDeseja consultar novamente? (S/N): ")
+
+            while again.lower() == "s":
+                data = input("Digite a data de início da locação a ser consultada: ")
+                id = input("Digite o id da locação a ser consultada: ")
+                consultar_locacao(data, id)
+                again = input("\n\nDeseja consultar novamente? (S/N): ")
 
     elif escolha1 == 4:
         clear()
@@ -424,8 +464,23 @@ while True:
         print("\nAba de Panorama\n")
         print("1 - Panorama: clientes")
         print("2 - Panorama: veículos")
-        print("2 - Panorama: locacoes")
-        print("3 - Voltar")
+        print("3 - Panorama: locacoes")
+        print("4 - Voltar")
+
+        escolha2 = int(input("\n"))
+
+        if escolha2 == 1:
+            clear()
+            panorama_cv(clientes)
+        
+        if escolha2 == 2:
+            clear()
+            panorama_cv(veiculos)
+        
+        if escolha2 == 3:
+            clear()
+            panorama_locacoes()
+
 
     elif escolha1 == 7:
         break
