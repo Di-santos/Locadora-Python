@@ -1,4 +1,7 @@
-# Falta concluir as consultas de locação
+#-------------------------------------------------- Tarefas --------------------------------------------------
+# Aprimorar as consultas
+# Melhorar o design
+# Melhorar as mensagens de erro
 
 import json
 import pprint
@@ -25,6 +28,7 @@ except:
     pass
 
 #--------------------------------------------------- Funções -------------------------------------------------
+
 def clear():
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
@@ -80,7 +84,7 @@ def consultar_cliente(cpf):
         pprint.pprint(clientes[cpf])
     
     except:
-        print("Ops, algo deu errado!")
+        print("\nOps, algo deu errado!")
 
 def consultar_veiculo(placa):
     try:
@@ -89,7 +93,7 @@ def consultar_veiculo(placa):
         pprint.pprint(veiculos[placa])
     
     except:
-        print("Ops, algo deu errado!")
+        print("\nOps, algo deu errado!")
 
 def consultar_locacao(data, id):
     try:
@@ -105,7 +109,7 @@ def consultar_locacao(data, id):
                 pprint.pprint(locacao)
 
     except:
-        print("Ops, algo deu errado!")
+        print("\nOps, algo deu errado!")
 # Edição
 def editar_cliente(cpf):
     try:
@@ -280,22 +284,32 @@ def lancar_devolucao(data, id):
 # Panorama
 def panorama_cv(db):
     for objeto in db:
-        print ("--------------------------------------------------------------")
-        pprint.pprint(objeto)
+        print ("\n--------------------------------------------------------------\n")
+        pprint.pprint(db[objeto])
+    
+    print ("\n--------------------------------------------------------------\n")
+    exit = input("\n[Pressione qualquer tecla para sair]\n")
 
 def panorama_locacoes():
+
     for ano in locacoes:
-        for mes in ano:
-            for dia in mes:
-                print ("--------------------------------------------------------------")
-                pprint.pprint(dia)
+        for mes in locacoes[ano]:
+            for dia in locacoes[ano][mes]:
+                print ("\n--------------------------------------------------------------\n")
+                print(f"{dia}/{mes}/{ano}")
+                for locacao in locacoes[ano][mes][dia]:
+                    print("\n---------------------------------\n")
+                    pprint.pprint(locacao)
+    
+    print ("\n--------------------------------------------------------------\n")
+    exit = input("\n[Pressione qualquer tecla para sair]\n")
 
 # -------------------------------------------------- Código ---------------------------------------------------
 
 # Menu inicial
 while True:
 
-    print("\n\n\n\n\n\n")
+    clear()
     print("1 - Evento")
     print("2 - Cadastro")
     print("3 - Consulta")
@@ -371,7 +385,6 @@ while True:
                 cpf = input("\n\nDigite o CPF do cliente a ser consultado: ")
                 consultar_cliente(cpf)
                 again = input("\n\nDeseja consultar novamente? (S/N): ")
-
 
         if escolha2 == 2:
             clear()
